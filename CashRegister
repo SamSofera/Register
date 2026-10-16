@@ -1,0 +1,103 @@
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp9
+{
+    internal class Program
+    {
+        /*
+        Make a cash register program that takes in a list of items and their prices,
+        and then calculates the total cost of the items, including tax.
+        The program should also allow the user to input a discount code, which will
+        apply a discount to the total cost.
+        */
+
+        static void Main(string[] args)
+        {
+            string[] products = { "Product1", "Product2", "Product3", "Product4", "Product5" };
+            double[] prices = { 50, 100, 150, 200, 250 };
+
+            double taxRate = 0.12;
+
+            DisplayList(products, prices);
+
+            Console.WriteLine();
+
+            Console.Write("Enter the product: ");
+            string product = Console.ReadLine();
+
+            Console.Write("Enter the quantity: ");
+            int quantity = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Enter discount code (SAVE10 or NONE): ");
+            string discountCode = Console.ReadLine();
+
+            double price = 0;
+            bool found = false;
+
+            for (int i = 0; i < products.Length; i++)
+            {
+                if (product.ToLower() == products[i].ToLower())
+                {
+                    price = prices[i];
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                CalculateTotalCost(price, quantity, taxRate, discountCode);
+            }
+            else
+            {
+                Console.WriteLine("Product not found.");
+            }
+        }
+
+        private static void DisplayList(string[] products, double[] prices)
+        {
+            Console.WriteLine("Available products:");
+
+            for (int i = 0; i < products.Length; i++)
+            {
+                Console.WriteLine($"{products[i]} - {prices[i]:F2}");
+            }
+        }
+
+        private static void CalculateTotalCost(double price, int quantity, double taxRate, string discountCode)
+        {
+            double subtotal = price * quantity;
+            double discount = 0;
+
+            if (discountCode.ToUpper() == "SAVE10")
+            {
+                discount = subtotal * 0.10;
+            }
+            else if (discountCode.ToUpper() == "NONE")
+            {
+                discount = 0;
+            }
+            else
+            {
+                Console.WriteLine("Invalid discount code. No discount applied.");
+            }
+
+            double discountedTotal = subtotal - discount;
+            double tax = discountedTotal * taxRate;
+            double finalTotal = discountedTotal + tax;
+
+            Console.WriteLine();
+            Console.WriteLine($"Subtotal: {subtotal:F2}");
+            Console.WriteLine($"Discount: {discount:F2}");
+            Console.WriteLine($"Tax: {tax:F2}");
+            Console.WriteLine($"Final total: {finalTotal:F2}");
+        }
+    }
+}
